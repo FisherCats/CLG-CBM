@@ -46,12 +46,6 @@ class iCIFAR100(iData):
         transforms.ToTensor(),
         transforms.Normalize(mean=(0.48145466, 0.4578275, 0.40821073), std=(0.26862954, 0.26130258, 0.27577711))
     ]
-    # test_trsf = [
-    #     transforms.Resize(size=224,interpolation=3),
-    #     transforms.CenterCrop(size=(224, 224)),
-    #     transforms.ToTensor(),
-    #     transforms.Normalize(mean=(0.48145466, 0.4578275, 0.40821073), std=(0.26862954, 0.26130258, 0.27577711))
-    # ] 
     test_trsf = train_trsf
     def download_data(self,preprocess=None):
         trainset = torchvision.datasets.CIFAR100(root='../../my_data/', train=True, download=True)
@@ -111,8 +105,8 @@ class iTiny_ImageNet(iData):
     ]
     test_trsf = train_trsf
     def download_data(self):
-        train_dir = "/home/HDD2/jskj_taozhe/Tiny_Imagenet/tiny-imagenet-200/train/"
-        test_dir = "/home/HDD2/jskj_taozhe/Tiny_Imagenet/tiny-imagenet-200/val/"
+        train_dir = "[DATA_PATH]/train/"
+        test_dir = "[DATA_PATH]/val/"
 
         train_dset = datasets.ImageFolder(train_dir)
         test_dset = datasets.ImageFolder(test_dir)
@@ -151,18 +145,6 @@ class iImageNet1000(iData):
 
 class iImageNet100(iData):
     use_path = True
-    # train_trsf = [
-    #     transforms.RandomResizedCrop(224),
-    #     transforms.RandomHorizontalFlip(),
-    # ]
-    # test_trsf = [
-    #     transforms.Resize(256),
-    #     transforms.CenterCrop(224),
-    # ]
-    # common_trsf = [
-    #     transforms.ToTensor(),
-    #     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-    # ]
     train_trsf = [
         transforms.Resize(size=224,interpolation=3),
         transforms.CenterCrop(size=(224, 224)),
@@ -174,8 +156,8 @@ class iImageNet100(iData):
 
     def download_data(self):
         # assert 0, "You should specify the folder of your dataset"
-        train_dir = "/home/HDD2/jskj_taozhe/imagenet_subset/train/"
-        test_dir = "/home/HDD2/jskj_taozhe/imagenet_subset/val/"
+        train_dir = "[DATA_PATH]/train/"
+        test_dir = "[DATA_PATH]/val/"
 
         train_dset = datasets.ImageFolder(train_dir)
         test_dset = datasets.ImageFolder(test_dir)
@@ -216,8 +198,8 @@ class iFood101(iData):
     
     def download_data(self):
         root = "../../my_data/"
-        train_dset = torchvision.datasets.Food101(root=root,download=False)
-        test_dset = torchvision.datasets.Food101(root=root,split="test",download=False)
+        train_dset = torchvision.datasets.Food101(root=root,download=True)
+        test_dset = torchvision.datasets.Food101(root=root,split="test",download=True)
         self.train_data,self.train_targets = train_dset._image_files,train_dset._labels
         self.test_data,self.test_targets = test_dset._image_files,test_dset._labels
 
@@ -250,28 +232,6 @@ class iCars(iData):
     def download_data(self):
         train_dir = "../../my_data/cars/train/"
         test_dir = "../../my_data/cars/test/"
-        # train_dir = "../../ICICLE_mod/data/cars_cropped/train_augmented/"
-        # test_dir = "../../ICICLE_mod/data/cars_cropped/test/"
-
-        train_dset = datasets.ImageFolder(train_dir)
-        test_dset = datasets.ImageFolder(test_dir)
-        self.train_data,self.train_targets = split_images_labels(train_dset.imgs)
-        self.test_data,self.test_targets = split_images_labels(test_dset.imgs)
-
-class iCars_aug(iData):
-    use_path = True
-    train_trsf = [
-        transforms.Resize(size=224,interpolation=3),
-        transforms.CenterCrop(size=(224, 224)),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=(0.48145466, 0.4578275, 0.40821073), std=(0.26862954, 0.26130258, 0.27577711))
-    ]
-    test_trsf = train_trsf
-    def download_data(self):
-        # train_dir = "../../my_data/cars/train/"
-        # test_dir = "../../my_data/cars/test/"
-        train_dir = "../../ICICLE_mod/data/cars_cropped/train_augmented/"
-        test_dir = "../../ICICLE_mod/data/cars_cropped/test/"
 
         train_dset = datasets.ImageFolder(train_dir)
         test_dset = datasets.ImageFolder(test_dir)
@@ -286,51 +246,11 @@ class iCUB200(iData):
         transforms.ToTensor(),
         transforms.Normalize(mean=(0.48145466, 0.4578275, 0.40821073), std=(0.26862954, 0.26130258, 0.27577711))
     ]
-    # test_trsf = [
-    #     transforms.Resize(size=224,interpolation=3),
-    #     transforms.CenterCrop(size=(224, 224)),
-    #     transforms.ToTensor(),
-    #     transforms.Normalize(mean=(0.48145466, 0.4578275, 0.40821073), std=(0.26862954, 0.26130258, 0.27577711))
-    # ]
     test_trsf = train_trsf
-    # def download_data(self):
-    #     trainset = CUB_200_2011(mode='train',download=False)
-    #     testset = CUB_200_2011(mode='test',download=False)
-    #     self.train_data,self.train_targets,self.test_data,self.test_targets = [],[],[],[]
-    #     for item in range(0,len(trainset.data)):
-    #         self.train_data.append(trainset.base_folder + "images/" + trainset.data.iloc[item]['filepath'])
-    #         self.train_targets.append(trainset.data.iloc[item]['target']-1)
-    #     for item in range(0,len(testset.data)):
-    #         self.test_data.append(testset.base_folder + "images/" + testset.data.iloc[item]['filepath'])
-    #         self.test_targets.append(testset.data.iloc[item]['target']-1)
-    #     self.train_data,self.train_targets = np.array(self.train_data),np.array(self.train_targets)
-    #     self.test_data,self.test_targets = np.array(self.test_data),np.array(self.test_targets)
-    
+
     def download_data(self):
-        # train_dset = datasets.ImageFolder("../../ICICLE_mod/data/cub_200_2011_cropped/train_cropped_augmented/")
-        # test_dset = datasets.ImageFolder("../../ICICLE_mod/data/cub_200_2011_cropped/test_cropped/")
         train_dset = datasets.ImageFolder("../../my_data/cub/train/")
         test_dset = datasets.ImageFolder("../../my_data/cub/test/")
-
-        self.train_data,self.train_targets = split_images_labels(train_dset.imgs)
-        self.test_data,self.test_targets = split_images_labels(test_dset.imgs)
-        # trn_data = {'x': np.array(train_dset.imgs)[:,0].tolist(), 'y': np.array(train_dset.imgs)[:,1].tolist()}
-        # tst_data = {'x': np.array(test_dset.imgs)[:,0].tolist(), 'y': np.array(test_dset.imgs)[:,1].tolist()}
-
-class iCUB200_aug(iData):
-    use_path = True
-    train_trsf = [
-        transforms.Resize(size=224,interpolation=3),
-        transforms.CenterCrop(size=(224, 224)),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=(0.48145466, 0.4578275, 0.40821073), std=(0.26862954, 0.26130258, 0.27577711))
-    ]
-    test_trsf = train_trsf
-    def download_data(self):
-        train_dset = datasets.ImageFolder("../../ICICLE_mod/data/cub_200_2011_cropped/train_cropped_augmented/")
-        test_dset = datasets.ImageFolder("../../ICICLE_mod/data/cub_200_2011_cropped/test_cropped/")
-        # train_dset = datasets.ImageFolder("../../my_data/cub/train/")
-        # test_dset = datasets.ImageFolder("../../my_data/cub/test/")
 
         self.train_data,self.train_targets = split_images_labels(train_dset.imgs)
         self.test_data,self.test_targets = split_images_labels(test_dset.imgs)

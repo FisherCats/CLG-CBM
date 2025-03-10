@@ -290,44 +290,30 @@ class DataManager(object):
             print("random selection!")
             return attributes
         elif attribute == 'cifar100':
-            # path = "./data/cifar-100-python/CIFAR100_simple_3.5turbo.json"
-            # path = "./data/cifar100/CIFAR100_simple_gpt4o.json"
             path = "./data/cifar100/concepts.json"
-            # path = "./data/cub200/cub200_4o_simple_cpts.json"
             name = "./data/cifar100/cifar_label2class.json"
-            # path = "./data/cifar-100-python/simple_cpts.json"
             
         elif attribute == 'cub200': 
-            # path = "./data/cub200/cub_200.json"
             path = "./data/cub200/cub200_4o_simple_cpts.json"
-            # path = "./data/tinyimagenet/15_tinyimagenet_simple_gpt4o.json"
             name = "./data/cub200/cub200_label2class.json"
         elif attribute == 'imagenet-r': path = "./data/Imagenet-R/INR_simple_gpt4o.json"
         elif attribute == 'imagenet-a': path = "./data/Imagenet-A/INA_simple_gpt4o.json"
         elif attribute == "food": 
             path = "./data/food/food_4o_simple_cpts.json"
-            # path = "./data/food/food_simple_gpt4o.json"
             name = "./data/food/food_label2class.json"
         elif attribute == "flower": 
-            # path = "./data/flower/15_flower_gpt4o.json"
-            # path = "./data/flower/flower_4turbo_simple_cpts.json"
-            # path = "./data/flower/flower_3.5turbo_simple_cpts.json"
             path = "./data/flower/flower_4o_simple_cpts.json"
             name = "./data/flower/flower_label2class.json"
         elif attribute == "pets": 
             path = "./data/oxford-iiit-pet/pets_simple_gpt4o.json"
             name = "./data/oxford-iiit-pet/pets_label2class.json"
         elif attribute == "cars": 
-            # path = "./data/cars/cars_simple_gpt4o.json"
             path = "./data/cars/cars_4o_simple_cpts.json"
-            # path = "./data/cars/cars_4o_simple_x_cpts.json"
             name = "./data/cars/cars_label2class.json"
         elif attribute == "tinyimagenet": 
             path = "./data/tinyimagenet/15_tinyimagenet_simple_gpt4o.json"
             name = "./data/tinyimagenet/Tinyimagenet_label2class.json"
         elif attribute == "imagenet100":
-            # path = "./data/imagenet100/IN100_3.5turbo_simple_cpts.json"
-            # path = "./data/imagenet100/IN100_4turbo_simple_cpts.json"
             path = "./data/imagenet100/IN100_4o_simple_cpts.json"
             name = "./data/imagenet100/imagenet100_label2class.json"
         else:
@@ -339,7 +325,6 @@ class DataManager(object):
         names = json.load(name)
         name = [names[str(idx)] for idx in indice]
         for idx in indice:
-            # att = [super_cls[str(idx)][0] + " and " + i for i in attributes[str(idx)]]
             cpt_count.append(cpt_count[-1] + len(attributes[str(idx)]))
             for item in attributes[str(idx)]: attr.append(item)
         return attr,name,cpt_count
