@@ -33,4 +33,4 @@ The configuration of hyper-parameters of our method is provided in `exps` folder
 ```bash
 python main.py --config=[config json]
 ```
-You can modify the configuration file directly to specialize your training process.
+You can modify the configuration file directly to specialize the training process.
