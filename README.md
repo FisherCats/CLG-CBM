@@ -29,7 +29,7 @@ We provide the concepts that are utilized in our experiments in `data` folder.
 
 
 ## Model training 
-The configuration of hyper-parameters of our method is provided in `exps` folder. You can run a experiment follows:
+The configuration of hyper-parameters of our method is provided in `exps` folder. You can run an experiment follows:
 ```bash
 python main.py --config=[config json]
 ```
