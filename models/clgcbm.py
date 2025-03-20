@@ -45,7 +45,7 @@ class Player(BaseLearner):
         self.rest_cls = self.data_manager.concept_order
         
     def get_cls_feat(self,cls,features,labels):
-        # 获取第cls类的scores
+
         train_feature_dataset = self.data_manager.generate_dataset(range(cls, cls+1),features,labels)
         return train_feature_dataset.features.float()
     
@@ -206,8 +206,6 @@ class Player(BaseLearner):
         test_indice = np.arange(0,self._total_classes)
 
         self.concept_cls = self.data_manager.concept_order[self._known_classes:self._total_classes]
-
-
         logging.info('Learning on {}-{}'.format(self._known_classes, self._total_classes))
         # Preparing dataset
         train_dataset = self.data_manager.get_dataset(indice, source='train',mode='train')
@@ -285,7 +283,7 @@ class Player(BaseLearner):
                 else: inputs, targets = batch[1],batch[2]
                 inputs = inputs.float().to(self._device)
                 targets = targets.long().to(self._device)
-                if self.stage:
+                if self.stage: # training CBL & Classifier
                     if self._cur_task>0 and self.args['sg_num']: 
                         sg_inputs, sg_targets = self._sample_gussian(idx,random_class_order_list,self.args['sg_num'])
                         inputs = torch.cat([inputs, sg_inputs], dim=0)
@@ -301,7 +299,7 @@ class Player(BaseLearner):
                         loss += self.args['sim'] * self._similiarity_loss(inputs, self.bottleneck, CSV)
                     loss += self._sparse_linear_loss(self._network.unity)
                     
-                else:
+                else: # Learning to search concepts
                     targets -= offset
                     logits = model(inputs)
                     loss = loss_function(logits,targets)
@@ -335,6 +333,7 @@ class Player(BaseLearner):
         return best_model, best_acc
     
     def _similiarity_loss(self, inputs, bottleneck, csv, sg=None, cpt_targets=None):
+        # concept alignment
         if len(inputs.shape) > 2: img_feats = self._network.extract_vector(inputs.to(self._device)).float()
         else: img_feats = inputs.float()
         distance_loss = nn.MSELoss()
@@ -358,7 +357,6 @@ class Player(BaseLearner):
                        
 
     def _sample_gussian(self,batch_id,random_class_order_list,sg_num):
-
         sg_inputs = []
         sg_targets = []
         
