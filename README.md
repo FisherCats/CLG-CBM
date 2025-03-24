@@ -1,7 +1,7 @@
 # Language Guided Concept Bottleneck Models for Interpretable Continual Learning
 The official PyTorch implementation of CVPR2025 paper "Language Guided Concept Bottleneck Models for Interpretable Continual Learning".
 
-We follow the framework of [PyCIL](https://github.com/G-U-N/PyCIL) to implement this project.
+We follow the framework of [Pilot](https://github.com/sun-hailong/LAMDA-PILOT) to implement this project.
 
 ## Environment preparation
 
