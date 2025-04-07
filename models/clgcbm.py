@@ -182,16 +182,8 @@ class Player(BaseLearner):
                     selected_idxes.append(elem)
                     break
         selected_idxes = np.array(selected_idxes[:num_attributes])
-        count_dict_pos = {}
-        count_dict_neg = {}
-        for cls in range(len(concept_cls)):
-            idx_list = np.array([i for i,index in enumerate(selected_idxes) if index >= counter[cls] and index < counter[cls+1]])
-            # self.raw_concepts.append([attributes[selected_idxes[i]] for i in idx_list])
-            idx_list = idx_list + self.cpt_table[-1]
-            count_dict_pos[cls] = idx_list
-            count_dict_neg[cls] = np.array([i for i in range(self._cur_task * self.pool) if i not in idx_list])
         for j in selected_idxes: self.raw_concepts.append(attributes[j])
-        return attribute_embeddings[selected_idxes].clone().detach(), class_name_embeddings.clone().detach(),count_dict_pos,count_dict_neg 
+        return attribute_embeddings[selected_idxes].clone().detach(), class_name_embeddings.clone().detach()
 
             
     def after_task(self):
@@ -218,9 +210,9 @@ class Player(BaseLearner):
         # bottleneck
         self.pool = int(task_size * self.args["pool"])
         # load bottleneck
-        attributes_embeddings,class_names,counter_dict_pos,counter_dict_neg = self.cluster(self.concept_cls,self.pool,mode="train") # 返回挑选的属性特征  
+        attributes_embeddings,class_names = self.cluster(self.concept_cls,self.pool,mode="train")  
 
-        self.names  = class_names if self.names == None else torch.cat((self.names,class_names),dim=0) # 记录类名
+        self.names  = class_names if self.names == None else torch.cat((self.names,class_names),dim=0) 
         self.bottleneck = attributes_embeddings.to(self._device) if self.bottleneck is None else torch.concat((self.bottleneck,attributes_embeddings.to(self._device)),dim=0)
         
         self.bottle_dict[self._cur_task] = self.bottleneck
@@ -404,8 +396,7 @@ class Player(BaseLearner):
 
             
         for class_idx in range(0,self._known_classes):
-            if self.args["pseudo_random"]: new_idx = np.random.choice(range(self._known_classes,self._total_classes),size=1)[0]
-            else: new_idx = self._relations[class_idx]
+            new_idx = self._relations[class_idx]
             vectors_train.append(vectors_train[new_idx-self._known_classes]-self.ori_protos[new_idx].cpu().numpy()+self.ori_protos[class_idx].cpu().numpy())
             labels_train.append([class_idx]*len(vectors_train[-1])) 
 
