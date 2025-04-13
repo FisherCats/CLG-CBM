@@ -1,5 +1,5 @@
 # Language Guided Concept Bottleneck Models for Interpretable Continual Learning
-Paper link: <a href="https://arxiv.org/abs/2503.23283"><img src="https://img.shields.io/badge/arXiv-2503.23283-red"></a>
+<a href="https://arxiv.org/abs/2503.23283"><img src="https://img.shields.io/badge/arXiv-2503.23283-red"></a>
 
 The official PyTorch implementation of CVPR2025 paper "Language Guided Concept Bottleneck Models for Interpretable Continual Learning".
 
