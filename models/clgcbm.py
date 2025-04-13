@@ -210,7 +210,7 @@ class Player(BaseLearner):
         # bottleneck
         self.pool = int(task_size * self.args["pool"])
         # load bottleneck
-        attributes_embeddings,class_names = self.cluster(self.concept_cls,self.pool,mode="train")  
+        attributes_embeddings,class_names = self.cluster(self.concept_cls,self.pool)  
 
         self.names  = class_names if self.names == None else torch.cat((self.names,class_names),dim=0) 
         self.bottleneck = attributes_embeddings.to(self._device) if self.bottleneck is None else torch.concat((self.bottleneck,attributes_embeddings.to(self._device)),dim=0)
@@ -282,8 +282,7 @@ class Player(BaseLearner):
                         targets = torch.cat([targets, sg_targets], dim=0)
                     else: sg_inputs = None
 
-                    if self.args['baseline_mode']: logits = model.forward_fc(inputs)
-                    else: logits,CSV = model.forward_explainer(inputs)
+                    logits,CSV = model.forward_explainer(inputs)
                     
                     loss = loss_function(logits,targets) 
                     
@@ -313,7 +312,6 @@ class Player(BaseLearner):
                 if test_accuracy > best_acc: 
                     best_acc = test_accuracy
                     if self.stage == 0: best_model = copy.deepcopy(model.gate)  
-                    elif self.args['baseline_mode']: best_model = copy.deepcopy(model.unity)
                     else: best_model = [copy.deepcopy(model.explainer), copy.deepcopy(model.unity)]
                 
                 logging.info('task: %d, epoch:%d, train loss:%.6f,train accuracy: %.5f,test_accuracy:%.5f'  
@@ -427,8 +425,7 @@ class Player(BaseLearner):
                 else: inputs,targets = batch[1],batch[2]
                 inputs = inputs.float().to(self._device)
                 if self.stage:
-                    if self.args['baseline_mode']: logits = model.forward_fc(inputs)
-                    else: logits,CSV = model.forward_explainer(inputs)
+                    logits,CSV = model.forward_explainer(inputs)
                 else:
                     logits = model.gate(inputs)
                 pred = torch.argmax(logits, dim=-1)
@@ -448,8 +445,7 @@ class Player(BaseLearner):
                 targets = batch[2].long().to(self._device)
                 result = None
 
-                if self.args['baseline_mode']: logits = self._network.forward_fc(inputs)
-                else: logits,CSV = self._network.forward_explainer(inputs)
+                logits,CSV = self._network.forward_explainer(inputs)
                 
                 predicts = torch.topk(logits, k=self.topk, dim=1, largest=True, sorted=True)[1]  # [bs, topk]
 

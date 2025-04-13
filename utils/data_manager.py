@@ -4,7 +4,7 @@ import numpy as np
 from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
-from utils.data import iCIFAR10, iCIFAR100, iImageNet100,iCUB200,iImageNet_R,iImageNet_A,iPets,iFood101,iFlower102,iCars,iTiny_ImageNet,iCUB200_aug,iCars_aug
+from utils.data import iCIFAR10, iCIFAR100, iImageNet100,iCUB200,iImageNet_R,iImageNet_A,iPets,iFood101,iFlower102,iCars,iTiny_ImageNet
 from tqdm import tqdm
 import json
 class DataManager(object):

@@ -27,5 +27,6 @@
     "score_model": ["bn","linear"],
     "regularizer":"mahalanobis",
     "print_freq":10,
-    "memory_size":0
+    "memory_size":0,
+    "repeat": false
 }

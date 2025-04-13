@@ -48,8 +48,8 @@ class iCIFAR100(iData):
     ]
     test_trsf = train_trsf
     def download_data(self,preprocess=None):
-        trainset = torchvision.datasets.CIFAR100(root='../../my_data/', train=True, download=True)
-        testset = torchvision.datasets.CIFAR100(root='../../my_data/', train=False, download=True)
+        trainset = torchvision.datasets.CIFAR100(root='../my_data/', train=True, download=True)
+        testset = torchvision.datasets.CIFAR100(root='../my_data/', train=False, download=True)
         self.train_data, self.train_targets = trainset.data, np.array(trainset.targets)
         self.test_data, self.test_targets = testset.data, np.array(testset.targets)
 

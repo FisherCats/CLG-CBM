@@ -473,90 +473,6 @@ class EaseNet(BaseNet):
             if param.requires_grad:
                 print(name, param.numel())
     
-class ForgerNet(BaseNet):
-    def __init__(self, args, pretrained,device):
-        super().__init__(args, pretrained)
-        self.convnet,pre = clip.load(args["model_size"],device=f"{device.type}:{device.index}")
-        # self.backbone = get_convnet(args,pretrained)
-        # self.backbone.out_dim = 768
-        self.feat_dim = 1024 if args["model_size"] == "RN50" else 512
-        # self.unifier = self.generate_fc(self.feat_dim, args["init_cls"]).to(device)
-        self.freeze_backbone()
-        self.device = device
-        self.unity = nn.ModuleList()
-        self.scale = self.convnet.logit_scale.exp()
-        self.mode = args["adapted_position"]
-        if self.mode == "txt" or self.mode == "img":
-            self.adapter = self.generate_fc(self.feat_dim, self.feat_dim, bias=False).to(self.device)
-        elif self.mode == "both":
-            self.img_adapter = self.generate_fc(self.feat_dim, self.feat_dim, bias=False).to(self.device)
-            self.txt_adapter = self.generate_fc(self.feat_dim, self.feat_dim, bias=False).to(self.device)
-        self.relu = torch.nn.ReLU()
-    
-    def freeze_backbone(self):
-        for name, param in self.convnet.named_parameters():
-            param.requires_grad = False  
-    
-    def forward_fc(self,x):
-        if len(x.shape) > 2: x = self.extract_vector(x).float()
-        x = x / x.norm(dim=1, keepdim=True)
-        adapt_x = self.adapter(x)
-        logits = None
-        for fc in self.unity:
-            logits = fc(adapt_x) if logits is None else torch.concat((logits,fc(adapt_x)),dim=1)
-        return logits
-    
-    def forward_clip(self,x,t,sg=None):
-        if len(x.shape) > 2: x = self.extract_img_vector(x).float()
-        if sg is not None:
-            x = torch.cat((x,sg),dim=0).float()
-        t = self.extract_txt_vector(t).float()
-        
-        if self.mode == "img": x = self.adapter(x)
-        elif self.mode == "txt": t = self.adapter(t)
-        elif self.mode == "both": 
-            x, t = self.img_adapter(x), self.txt_adapter(t)
-        # normalized features
-        x_norm = x / x.norm(dim=1, keepdim=True)
-        t_norm = t / t.norm(dim=1, keepdim=True)
-
-        # cosine similarity as logits
-        logit_scale = self.convnet.logit_scale.exp()
-        logits_clip = logit_scale * x_norm @ t_norm.t()
-        
-        return logits_clip
-    
-    def forward_proto(self, x, protos, t):
-        if len(x.shape) > 2: x = self.extract_img_vector(x).float()
-        x = x / x.norm(dim=1, keepdim=True)
-        adapt_x = self.adapter(x)
-        adapt_x = adapt_x / adapt_x.norm(dim=1, keepdim=True)
-        t = self.extract_txt_vector(t).float()
-        t_norm = t / t.norm(dim=1, keepdim=True)
-        logits = self.convnet.logit_scale.exp() * (adapt_x @ t_norm.T)
-        # adapt_x @ protos.float().T 
-        return adapt_x, logits
-    
-    # def forward_cluster(self, x, protos):
-    #     if len(x.shape) > 2: x = self.extract_img_vector(x).float()
-    #     x = x / x.norm(dim=1, keepdim=True)
-    #     adapt_x = self.adapter(x)
-    #     logits = adapt_x @ protos.float().T 
-    #     return logits
-        
-    def generate_fc(self, in_dim, out_dim,bias=True):
-        fc = nn.Linear(in_dim,out_dim,bias=bias).to(self.device)
-        return fc
-    
-    def update_fc(self, nb_classes, bias=True):
-        self.unity.append(self.generate_fc(self.feat_dim, nb_classes, bias=bias).to(self.device))
-    
-    def extract_img_vector(self, x):
-        return self.convnet.encode_image(x)
-    
-    def extract_txt_vector(self, t):
-        return self.convnet.encode_text(t)
-    
 class PRAKANet(BaseNet):
     def __init__(self, args, pretrained):
         super().__init__(args, pretrained)
@@ -641,18 +557,11 @@ class Gateway(BaseNet):
         self.device = device
         self.convnet = None
         self.gate = None
-        self.mode = args["mode"]
         # self.heads = None
         self.heads = nn.ModuleList()
         
     def forward(self, x):
-        results=None
-        if self.mode == "multi":
-            for fc in self.heads:
-                output = fc(x)
-                results = output if results is None else torch.concat((results,output),dim=1)
-        else: 
-            results = self.gate(x)
+        results = self.gate(x)
         return results
     
     def update_gateway(self,type,output_dim,input_dim=None,num_attributes=None):
@@ -666,7 +575,6 @@ class Gateway(BaseNet):
         nb_output = last.out_features
         nb_input = last.in_features
     
-        if self.mode == "multi": out_dim += nb_output
         new = nn.Linear(nb_input,out_dim,bias=True if last.bias is not None else False)
         new.weight.data[:nb_output] = copy.deepcopy(last.weight.data)
         if last.bias is not None:
