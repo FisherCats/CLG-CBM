@@ -43,6 +43,6 @@ We provide the concepts that are utilized in our experiments in `data` folder.
 ## Model training 
 The configuration of hyper-parameters of our method is provided in `exps` folder. You can run an experiment follows:
 ```bash
-python main.py --config=[config json path]
+python main.py --config=<config json path>
 ```
 You can modify the configuration file directly to specialize the training process.
