@@ -8,6 +8,8 @@ This repo is the official PyTorch implementation of CVPR2025 paper "Language Gui
 
 We follow the framework of [Pilot](https://github.com/sun-hailong/LAMDA-PILOT) to implement this project.
 
+[framework](./1741588380668.jpg)
+
 ## Environment Setup
 
 ```bash
