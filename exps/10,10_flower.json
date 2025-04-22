@@ -3,7 +3,7 @@
     "shuffle": true,
     "init_cls": 10, 
     "increment":10,
-    "device": ["2"],
+    "device": ["5"],
     "sim":1,
     "epochs" : 31,
     "lr" : 0.01,

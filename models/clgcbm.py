@@ -4,8 +4,6 @@ import math
 import logging
 import numpy as np
 from tqdm import tqdm
-import matplotlib.pyplot as plt
-from sklearn import manifold
 import random
 import torch
 import copy
@@ -20,7 +18,7 @@ from utils.inc_net import IncrementalNet,PrototypicalNet,Gateway,CLASS_CONCEPT_M
 from utils.toolkit import count_parameters, target2onehot, tensor2numpy
 from torch.optim.lr_scheduler import StepLR, CosineAnnealingLR
 from utils.data_manager import FeatureDataset
-from sklearn.cluster import KMeans
+
 import time
 from utils.data_manager import DataManager
 class Player(BaseLearner):
@@ -77,24 +75,7 @@ class Player(BaseLearner):
 
                 self.ori_protos.append(cls_mean)
                 self.ori_covs.append(cls_cov)
-                
-    def _get_k_protos(self,k,data):
-        
-        optimizible = data.cpu().numpy()
-        from sklearn.cluster import KMeans
-        kmeans = KMeans(n_clusters=k,n_init='auto')
-        kmeans = kmeans.fit(optimizible)
-        cluster_lables = kmeans.labels_
-        cluster_means = []
-        for i in range(k):
-            cluster_data = optimizible[cluster_lables == i]
-            cluster_mean = torch.tensor(np.mean(cluster_data, axis=0), dtype=torch.float64).to(self._device)
-            # cluster_var = torch.tensor(np.var(cluster_data, axis=0), dtype=torch.float64).to(self._device)
-            cluster_means.append(cluster_mean)
-            # cluster_vars.append(cluster_var)
-        
-        return torch.stack(cluster_means)
-        
+                        
     def get_image_embeddings(self,loader):
 
         with torch.no_grad():

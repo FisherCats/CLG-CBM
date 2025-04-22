@@ -213,7 +213,7 @@ class iFlower102(iData):
     ]
     test_trsf = train_trsf
     def download_data(self):
-        root = "../../my_data/"
+        root = "../my_data/"
         train_dset = torchvision.datasets.Flowers102(root=root,download=True)
         test_dset = torchvision.datasets.Flowers102(root=root,split="test",download=True)
         self.train_data,self.train_targets = train_dset._image_files,train_dset._labels

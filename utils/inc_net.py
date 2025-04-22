@@ -17,7 +17,7 @@ from convs.memo_cifar_resnet import get_resnet32_a2fc as get_memo_resnet32 #for 
 from convs.rep_mobilenet import rep_mobilenet 
 from convs.mobilenet_v2 import mobilenet_v2 
 from copy import deepcopy
-import timm
+
 def get_convnet(args, pretrained=False):
     name = args["convnet_type"].lower()
     if name == "resnet32":

@@ -5,9 +5,17 @@ The official PyTorch implementation of CVPR2025 paper "Language Guided Concept B
 
 We follow the framework of [Pilot](https://github.com/sun-hailong/LAMDA-PILOT) to implement this project.
 
-## Environment preparation
+## Environment Setup
 
-Coming soon...
+```bash
+conda create -n <env name> python=3.8.10 -y
+conda activate <env name>
+conda install pytorch==1.13.0 torchvision==0.14.0 torchaudio==0.13.0 pytorch-cuda=11.7 -c pytorch -c nvidia --no-deps
+# other dependencies
+pip install -r requirements.txt
+pip install git+https://github.com/openai/CLIP.git
+```
+
 ## Dataset preparation
 We evaluated our approch on 3 coarse-grained datasets: CIFAR-100, TinyImageNet, ImageNet100; and 4 fine-grained datasets: CUB-200, Flower102, Food101, Stanford-cars.
 
