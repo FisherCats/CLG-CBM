@@ -4,7 +4,7 @@
     <img src="https://img.shields.io/badge/CVPR2025-blue" alt="arXiv">
 </a>
 
-The official PyTorch implementation of CVPR2025 paper "Language Guided Concept Bottleneck Models for Interpretable Continual Learning".
+This repo is the official PyTorch implementation of CVPR2025 paper "Language Guided Concept Bottleneck Models for Interpretable Continual Learning".
 
 We follow the framework of [Pilot](https://github.com/sun-hailong/LAMDA-PILOT) to implement this project.
 
@@ -40,10 +40,9 @@ def download_data(self):
 ## Concept preparation
 We provide the concepts that are utilized in our experiments in `data` folder. 
 
-
 ## Model training 
 The configuration of hyper-parameters of our method is provided in `exps` folder. You can run an experiment follows:
 ```bash
-python main.py --config=[config json]
+python main.py --config=[config json path]
 ```
 You can modify the configuration file directly to specialize the training process.
